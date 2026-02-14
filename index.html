@@ -110,7 +110,6 @@ Happy Valentine’s Day.<br><br>
 <script>
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
-const btn = document.getElementById("btn");
 const message = document.getElementById("message");
 
 function resize(){
@@ -240,23 +239,17 @@ function createFloating(){
 
 /* START FUNCTION */
 function startExperience(){
-  btn.style.display="none";
+  const button = document.querySelector("button");
+  button.style.display="none";
   drawBouquet();
   createFloating();
   message.style.opacity=1;
 }
-
-/* Desktop click */
-btn.addEventListener("click", startExperience);
-
-/* Mobile touch fix */
-btn.addEventListener("touchstart", function(e){
-  e.preventDefault();
-  startExperience();
-}, {passive:false});
 </script>
+
 
 
 </body>
 </html>
+
 
