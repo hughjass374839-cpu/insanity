@@ -25,7 +25,7 @@ body{
 /* Top section */
 .top{
   margin-top:40px;
-  z-index:5;
+  z-index:10;
   position:relative;
 }
 
@@ -47,7 +47,7 @@ button{
   font-family:'Great Vibes', cursive;
   font-size:36px;
   cursor:pointer;
-  z-index:10;
+  z-index:20;
   position:relative;
   text-shadow: 0 0 8px rgba(0,0,0,0.8);
 }
@@ -60,7 +60,7 @@ button{
   font-size:38px;
   opacity:0;
   transition:opacity 2s ease;
-  z-index:5;
+  z-index:10;
   line-height:1.4;
   text-shadow:
     0 0 6px rgba(0,0,0,0.9),
@@ -72,6 +72,7 @@ canvas{
   top:0;
   left:0;
   z-index:1;
+  pointer-events:none; /* IMPORTANT FIX */
 }
 
 /* Floating Emojis */
@@ -79,15 +80,29 @@ canvas{
   position:absolute;
   font-size:28px;
   opacity:0.7;
-  z-index:2;
+  z-index:5;
   animation: floatUp linear infinite;
-  pointer-events:none !important;
+  pointer-events:none;
   user-select:none;
 }
 
 @keyframes floatUp{
   from { transform: translateY(100vh); }
   to { transform: translateY(-10vh); }
+}
+
+/* Explosion emojis */
+.explode{
+  position:absolute;
+  pointer-events:none;
+  user-select:none;
+  animation: boom 1.2s ease-out forwards;
+  z-index:30;
+}
+
+@keyframes boom{
+  0% { opacity:1; transform:translate(0,0) scale(1); }
+  100% { opacity:0; transform:translate(var(--x), var(--y)) scale(1.6); }
 }
 </style>
 </head>
@@ -102,7 +117,8 @@ canvas{
 
 <div id="message">
 too far away to handpick flowers and too broke to buy you some ;-;…<br><br>
-But here are some virtual flowers.<br><br> as a reminder that even if no one does, u will always have me ;] <br><br>
+But here are some virtual flowers.<br><br>
+as a reminder that even if no one does, u will always have me ;] <br><br>
 Happy Valentine’s Day.<br><br>
 — Nityodit
 </div>
@@ -110,7 +126,10 @@ Happy Valentine’s Day.<br><br>
 <script>
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
+const btn = document.getElementById("btn");
 const message = document.getElementById("message");
+
+let started = false;
 
 function resize(){
   canvas.width = window.innerWidth;
@@ -144,7 +163,6 @@ function drawPetal(x,y,angle,scale){
   ctx.restore();
 }
 
-/* Lily */
 function drawLily(cx,cy,scale){
   for(let i=0;i<6;i++){
     drawPetal(cx,cy,i*Math.PI/3,scale);
@@ -185,10 +203,8 @@ function drawRibbon(cx,cy){
   ctx.restore();
 }
 
-/* Bouquet */
 function drawBouquet(){
-  ctx.fillStyle="#1a0028";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
   const cx = canvas.width/2;
   const cy = canvas.height/2 + 200;
@@ -200,15 +216,6 @@ function drawBouquet(){
 
   ctx.beginPath();
   ctx.ellipse(cx,cy+80,340,420,0,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="rgba(255,255,255,0.05)";
-  ctx.beginPath();
-  ctx.ellipse(cx-120,cy+60,150,250,0.5,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.ellipse(cx+120,cy+60,150,250,-0.5,0,Math.PI*2);
   ctx.fill();
 
   drawLily(cx,cy-300,1.4);
@@ -225,31 +232,55 @@ function drawBouquet(){
 /* Floating Emojis */
 function createFloating(){
   const emojis = ["✨","🌹","💐"];
-  for(let i=0;i<25;i++){
+  setInterval(()=>{
     let span = document.createElement("div");
     span.className="floating";
-    span.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    span.innerText = emojis[Math.floor(Math.random()*emojis.length)];
     span.style.left = Math.random()*100+"vw";
-    span.style.animationDuration = (7+Math.random()*5)+"s";
-    span.style.fontSize = (22+Math.random()*25)+"px";
-    span.style.pointerEvents="none";
+    span.style.animationDuration = (8+Math.random()*6)+"s";
+    span.style.fontSize = (22+Math.random()*30)+"px";
     document.body.appendChild(span);
+    setTimeout(()=>span.remove(),15000);
+  },800);
+}
+
+/* Explosion */
+function explode(x,y){
+  const emojis=["💖","✨","🌹","💐"];
+  for(let i=0;i<12;i++){
+    let e=document.createElement("div");
+    e.className="explode";
+    e.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=x+"px";
+    e.style.top=y+"px";
+    e.style.setProperty('--x',(Math.random()*200-100)+"px");
+    e.style.setProperty('--y',(Math.random()*200-100)+"px");
+    e.style.fontSize=(20+Math.random()*30)+"px";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),1200);
   }
 }
 
-/* START FUNCTION */
-function startExperience(){
-  const button = document.querySelector("button");
-  button.style.display="none";
+function start(){
+  if(started) return;
+  started=true;
+  btn.style.display="none";
   drawBouquet();
   createFloating();
   message.style.opacity=1;
 }
+
+/* Mobile + Desktop safe */
+btn.addEventListener("click",start);
+btn.addEventListener("touchstart",start);
+
+/* Tap anywhere for explosion */
+document.addEventListener("pointerdown",e=>{
+  if(started){
+    explode(e.clientX,e.clientY);
+  }
+});
 </script>
-
-
 
 </body>
 </html>
-
-
