@@ -165,22 +165,20 @@ function drawRibbon(cx,cy){
   ctx.save();
   ctx.translate(cx,cy);
 
-  // left bow
   ctx.fillStyle="#c2185b";
+
   ctx.beginPath();
   ctx.moveTo(-60,0);
   ctx.quadraticCurveTo(-120,-40,-100,-80);
   ctx.quadraticCurveTo(-60,-60,-40,-20);
   ctx.fill();
 
-  // right bow
   ctx.beginPath();
   ctx.moveTo(60,0);
   ctx.quadraticCurveTo(120,-40,100,-80);
   ctx.quadraticCurveTo(60,-60,40,-20);
   ctx.fill();
 
-  // center knot
   ctx.beginPath();
   ctx.arc(0,-20,25,0,Math.PI*2);
   ctx.fill();
@@ -196,7 +194,6 @@ function drawBouquet(){
   const cx = canvas.width/2;
   const cy = canvas.height/2 + 200;
 
-  // detailed leaf base gradient
   let leafGrad = ctx.createRadialGradient(cx,cy,100,cx,cy,450);
   leafGrad.addColorStop(0,"#2e7d32");
   leafGrad.addColorStop(1,"#0f3d1c");
@@ -206,7 +203,6 @@ function drawBouquet(){
   ctx.ellipse(cx,cy+80,340,420,0,0,Math.PI*2);
   ctx.fill();
 
-  // layered leaves (extra depth)
   ctx.fillStyle="rgba(255,255,255,0.05)";
   ctx.beginPath();
   ctx.ellipse(cx-120,cy+60,150,250,0.5,0,Math.PI*2);
@@ -216,7 +212,6 @@ function drawBouquet(){
   ctx.ellipse(cx+120,cy+60,150,250,-0.5,0,Math.PI*2);
   ctx.fill();
 
-  // lilies
   drawLily(cx,cy-300,1.4);
   drawLily(cx-240,cy-200,1.1);
   drawLily(cx+240,cy-200,1.1);
@@ -225,7 +220,6 @@ function drawBouquet(){
   drawLily(cx-200,cy-80,0.9);
   drawLily(cx+200,cy-80,0.9);
 
-  // ribbon
   drawRibbon(cx,cy+40);
 }
 
@@ -235,21 +229,34 @@ function createFloating(){
   for(let i=0;i<25;i++){
     let span = document.createElement("div");
     span.className="floating";
-    span.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+    span.textContent = emojis[Math.floor(Math.random()*emojis.length)];
     span.style.left = Math.random()*100+"vw";
     span.style.animationDuration = (7+Math.random()*5)+"s";
     span.style.fontSize = (22+Math.random()*25)+"px";
+    span.style.pointerEvents="none";
     document.body.appendChild(span);
   }
 }
 
-btn.addEventListener("click",()=>{
+/* START FUNCTION */
+function startExperience(){
   btn.style.display="none";
   drawBouquet();
   createFloating();
   message.style.opacity=1;
-});
+}
+
+/* Desktop click */
+btn.addEventListener("click", startExperience);
+
+/* Mobile touch fix */
+btn.addEventListener("touchstart", function(e){
+  e.preventDefault();
+  startExperience();
+}, {passive:false});
 </script>
+
 
 </body>
 </html>
+
