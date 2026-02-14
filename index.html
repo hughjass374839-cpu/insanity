@@ -14,28 +14,26 @@ body{
   background:#1a0028;
   color:#e6ccff;
   font-family:'Great Vibes', cursive;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  height:100vh;
   text-align:center;
 }
 
-.top{
-  margin-top:40px;
-  z-index:10;
-  position:relative;
-}
-
+/* TITLE */
 h1{
+  position:absolute;
+  top:60px;
+  width:100%;
   font-size:80px;
   margin:0;
+  z-index:10;
   text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 15px rgba(120,0,120,0.6);
 }
 
-button{
-  margin-top:20px;
+/* BUTTON */
+#btn{
+  position:absolute;
+  top:220px;
+  left:50%;
+  transform:translateX(-50%);
   padding:18px 42px;
   border-radius:40px;
   border:none;
@@ -45,27 +43,25 @@ button{
   font-size:36px;
   cursor:pointer;
   z-index:20;
-  position:relative;
   text-shadow:0 0 8px rgba(0,0,0,0.8);
-  display:block;
   width:80%;
   max-width:500px;
-  height:120px;
-  touch-action:manipulation;
 }
 
+/* MESSAGE */
 #message{
   position:absolute;
   bottom:6%;
   width:100%;
   font-size:38px;
   opacity:0;
-  transition:opacity 2s ease;
+  transition:opacity 1.5s ease;
   z-index:10;
   line-height:1.4;
   text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.8);
 }
 
+/* CANVAS */
 canvas{
   position:absolute;
   top:0;
@@ -74,7 +70,7 @@ canvas{
   pointer-events:none;
 }
 
-/* Floating Emojis */
+/* Floating */
 .floating{
   position:absolute;
   font-size:28px;
@@ -94,7 +90,7 @@ canvas{
   position:absolute;
   pointer-events:none;
   font-size:28px;
-  animation: explode 900ms ease-out forwards;
+  animation: explode 800ms ease-out forwards;
 }
 
 @keyframes explode{
@@ -106,10 +102,8 @@ canvas{
 
 <body>
 
-<div class="top">
-  <h1>Hey Aanchal</h1>
-  <button id="btn">Click if you're cute</button>
-</div>
+<h1>Hey Aanchal</h1>
+<button id="btn">Click if you're cute</button>
 
 <canvas id="c"></canvas>
 
@@ -136,7 +130,7 @@ function resize(){
 resize();
 window.addEventListener("resize", resize);
 
-/* Lily */
+/* LILY */
 function drawPetal(x,y,angle,scale){
   ctx.save();
   ctx.translate(x,y);
@@ -249,7 +243,7 @@ function explode(x,y){
     e.style.setProperty("--x",(Math.random()*240-120)+"px");
     e.style.setProperty("--y",(Math.random()*240-120)+"px");
     document.body.appendChild(e);
-    setTimeout(()=>e.remove(),900);
+    setTimeout(()=>e.remove(),800);
   }
 }
 
@@ -262,19 +256,11 @@ function start(){
   message.style.opacity=1;
 }
 
-/* Button triggers only start */
-btn.addEventListener("click", start);
-btn.addEventListener("touchstart", start);
+btn.onclick = start;
 
-/* Explosion only after started */
-document.addEventListener("click", function(e){
-  if(started) explode(e.clientX,e.clientY);
-});
-
-document.addEventListener("touchstart", function(e){
+document.body.addEventListener("click", function(e){
   if(started){
-    const t=e.touches[0];
-    explode(t.clientX,t.clientY);
+    explode(e.clientX,e.clientY);
   }
 });
 </script>
