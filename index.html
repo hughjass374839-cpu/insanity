@@ -22,7 +22,6 @@ body{
   text-align:center;
 }
 
-/* Top section */
 .top{
   margin-top:40px;
   z-index:10;
@@ -32,9 +31,7 @@ body{
 h1{
   font-size:80px;
   margin:0;
-  text-shadow:
-    0 0 6px rgba(0,0,0,0.9),
-    0 0 15px rgba(120,0,120,0.6);
+  text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 15px rgba(120,0,120,0.6);
 }
 
 button{
@@ -49,8 +46,7 @@ button{
   cursor:pointer;
   z-index:20;
   position:relative;
-  text-shadow: 0 0 8px rgba(0,0,0,0.8);
-
+  text-shadow:0 0 8px rgba(0,0,0,0.8);
   display:block;
   width:80%;
   max-width:500px;
@@ -67,9 +63,7 @@ button{
   transition:opacity 2s ease;
   z-index:10;
   line-height:1.4;
-  text-shadow:
-    0 0 6px rgba(0,0,0,0.9),
-    0 0 12px rgba(0,0,0,0.8);
+  text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.8);
 }
 
 canvas{
@@ -77,7 +71,7 @@ canvas{
   top:0;
   left:0;
   z-index:1;
-  pointer-events:none; /* IMPORTANT */
+  pointer-events:none;
 }
 
 /* Floating Emojis */
@@ -95,7 +89,7 @@ canvas{
   to { transform: translateY(-10vh); }
 }
 
-/* Explosion emoji */
+/* Explosion */
 .explosion{
   position:absolute;
   pointer-events:none;
@@ -104,8 +98,8 @@ canvas{
 }
 
 @keyframes explode{
-  from { transform: scale(0.5); opacity:1; }
-  to { transform: translate(var(--x), var(--y)) scale(1.5); opacity:0; }
+  from { transform: scale(0.6); opacity:1; }
+  to { transform: translate(var(--x), var(--y)) scale(1.6); opacity:0; }
 }
 </style>
 </head>
@@ -114,13 +108,13 @@ canvas{
 
 <div class="top">
   <h1>Hey Aanchal</h1>
-  <button id="btn">If u r pretty and u know it click here :)</button>
+  <button id="btn">Click if you're cute</button>
 </div>
 
 <canvas id="c"></canvas>
 
 <div id="message">
-Too far away to handpick flowers for you and too broke to buy you some ;-;…<br><br>
+too far away to handpick flowers and too broke to buy you some ;-;…<br><br>
 But here are some virtual flowers.<br><br>
 as a reminder that even if no one does, u will always have me ;] <br><br>
 Happy Valentine’s Day.<br><br>
@@ -142,7 +136,7 @@ function resize(){
 resize();
 window.addEventListener("resize", resize);
 
-/* LILY */
+/* Lily */
 function drawPetal(x,y,angle,scale){
   ctx.save();
   ctx.translate(x,y);
@@ -181,11 +175,9 @@ function drawLily(cx,cy,scale){
   ctx.fill();
 }
 
-/* Ribbon */
 function drawRibbon(cx,cy){
   ctx.save();
   ctx.translate(cx,cy);
-
   ctx.fillStyle="#c2185b";
 
   ctx.beginPath();
@@ -203,11 +195,9 @@ function drawRibbon(cx,cy){
   ctx.beginPath();
   ctx.arc(0,-20,25,0,Math.PI*2);
   ctx.fill();
-
   ctx.restore();
 }
 
-/* Bouquet */
 function drawBouquet(){
   ctx.fillStyle="#1a0028";
   ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -235,31 +225,29 @@ function drawBouquet(){
   drawRibbon(cx,cy+40);
 }
 
-/* Floating Emojis */
 function createFloating(){
-  const emojis = ["✨","🌹","💐"];
+  const emojis=["✨","🌹","💐"];
   for(let i=0;i<25;i++){
-    let span = document.createElement("div");
+    let span=document.createElement("div");
     span.className="floating";
-    span.innerText = emojis[Math.floor(Math.random()*emojis.length)];
-    span.style.left = Math.random()*100+"vw";
-    span.style.animationDuration = (7+Math.random()*5)+"s";
-    span.style.fontSize = (22+Math.random()*25)+"px";
+    span.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    span.style.left=Math.random()*100+"vw";
+    span.style.animationDuration=(7+Math.random()*5)+"s";
+    span.style.fontSize=(22+Math.random()*25)+"px";
     document.body.appendChild(span);
   }
 }
 
-/* Explosion */
 function explode(x,y){
   const emojis=["💖","✨","🌸","💐"];
-  for(let i=0;i<12;i++){
+  for(let i=0;i<14;i++){
     let e=document.createElement("div");
     e.className="explosion";
     e.innerText=emojis[Math.floor(Math.random()*emojis.length)];
     e.style.left=x+"px";
     e.style.top=y+"px";
-    e.style.setProperty("--x",(Math.random()*200-100)+"px");
-    e.style.setProperty("--y",(Math.random()*200-100)+"px");
+    e.style.setProperty("--x",(Math.random()*240-120)+"px");
+    e.style.setProperty("--y",(Math.random()*240-120)+"px");
     document.body.appendChild(e);
     setTimeout(()=>e.remove(),900);
   }
@@ -274,16 +262,20 @@ function start(){
   message.style.opacity=1;
 }
 
-/* Mobile + Desktop Safe */
+/* Button triggers only start */
 btn.addEventListener("click", start);
 btn.addEventListener("touchstart", start);
 
-document.addEventListener("touchstart", e=>{
-  if(started) explode(e.touches[0].clientX,e.touches[0].clientY);
+/* Explosion only after started */
+document.addEventListener("click", function(e){
+  if(started) explode(e.clientX,e.clientY);
 });
 
-document.addEventListener("click", e=>{
-  if(started) explode(e.clientX,e.clientY);
+document.addEventListener("touchstart", function(e){
+  if(started){
+    const t=e.touches[0];
+    explode(t.clientX,t.clientY);
+  }
 });
 </script>
 
