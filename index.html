@@ -51,7 +51,7 @@ h1{
 /* MESSAGE */
 #message{
   position:absolute;
-  bottom:6%;
+  bottom:40px;
   width:100%;
   font-size:38px;
   opacity:0;
@@ -59,6 +59,7 @@ h1{
   z-index:10;
   line-height:1.4;
   text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.8);
+  padding:0 20px;
 }
 
 /* CANVAS */
@@ -90,12 +91,12 @@ canvas{
   position:absolute;
   pointer-events:none;
   font-size:28px;
-  animation: explode 800ms ease-out forwards;
+  animation: explode 900ms ease-out forwards;
 }
 
 @keyframes explode{
   from { transform: scale(0.6); opacity:1; }
-  to { transform: translate(var(--x), var(--y)) scale(1.6); opacity:0; }
+  to { transform: translate(var(--x), var(--y)) scale(1.5); opacity:0; }
 }
 </style>
 </head>
@@ -103,7 +104,7 @@ canvas{
 <body>
 
 <h1>Hey Aanchal</h1>
-<button id="btn">click here cutie</button>
+<button id="btn">Click if you're cute</button>
 
 <canvas id="c"></canvas>
 
@@ -151,7 +152,6 @@ function drawPetal(x,y,angle,scale){
   ctx.bezierCurveTo(40,-100,130,-100,0,-200);
   ctx.bezierCurveTo(-130,-100,-40,-100,0,0);
   ctx.fill();
-
   ctx.restore();
 }
 
@@ -159,7 +159,6 @@ function drawLily(cx,cy,scale){
   for(let i=0;i<6;i++){
     drawPetal(cx,cy,i*Math.PI/3,scale);
   }
-
   ctx.beginPath();
   let core = ctx.createRadialGradient(cx,cy,5,cx,cy,40);
   core.addColorStop(0,"#ffd700");
@@ -197,7 +196,7 @@ function drawBouquet(){
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
   const cx = canvas.width/2;
-  const cy = canvas.height/2 + 200;
+  const cy = canvas.height*0.68;   // << FIXED POSITIONING
 
   let leafGrad = ctx.createRadialGradient(cx,cy,100,cx,cy,450);
   leafGrad.addColorStop(0,"#2e7d32");
@@ -205,28 +204,28 @@ function drawBouquet(){
   ctx.fillStyle=leafGrad;
 
   ctx.beginPath();
-  ctx.ellipse(cx,cy+80,340,420,0,0,Math.PI*2);
+  ctx.ellipse(cx,cy+60,300,360,0,0,Math.PI*2);
   ctx.fill();
 
-  drawLily(cx,cy-300,1.4);
-  drawLily(cx-240,cy-200,1.1);
-  drawLily(cx+240,cy-200,1.1);
-  drawLily(cx-120,cy-150,1);
-  drawLily(cx+120,cy-150,1);
-  drawLily(cx-200,cy-80,0.9);
-  drawLily(cx+200,cy-80,0.9);
+  drawLily(cx,cy-250,1.2);
+  drawLily(cx-200,cy-170,1);
+  drawLily(cx+200,cy-170,1);
+  drawLily(cx-100,cy-120,0.9);
+  drawLily(cx+100,cy-120,0.9);
+  drawLily(cx-170,cy-60,0.85);
+  drawLily(cx+170,cy-60,0.85);
 
-  drawRibbon(cx,cy+40);
+  drawRibbon(cx,cy+20);
 }
 
 function createFloating(){
   const emojis=["✨","🌹","💐"];
-  for(let i=0;i<25;i++){
+  for(let i=0;i<20;i++){
     let span=document.createElement("div");
     span.className="floating";
     span.innerText=emojis[Math.floor(Math.random()*emojis.length)];
     span.style.left=Math.random()*100+"vw";
-    span.style.animationDuration=(7+Math.random()*5)+"s";
+    span.style.animationDuration=(8+Math.random()*6)+"s";
     span.style.fontSize=(22+Math.random()*25)+"px";
     document.body.appendChild(span);
   }
@@ -243,7 +242,7 @@ function explode(x,y){
     e.style.setProperty("--x",(Math.random()*240-120)+"px");
     e.style.setProperty("--y",(Math.random()*240-120)+"px");
     document.body.appendChild(e);
-    setTimeout(()=>e.remove(),800);
+    setTimeout(()=>e.remove(),900);
   }
 }
 
@@ -267,4 +266,3 @@ document.body.addEventListener("click", function(e){
 
 </body>
 </html>
-
