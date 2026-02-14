@@ -20,9 +20,9 @@ body{
 /* TITLE */
 h1{
   position:absolute;
-  top:60px;
+  top:6vh;
   width:100%;
-  font-size:80px;
+  font-size:clamp(42px,10vw,80px);
   margin:0;
   z-index:10;
   text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 15px rgba(120,0,120,0.6);
@@ -31,29 +31,29 @@ h1{
 /* BUTTON */
 #btn{
   position:absolute;
-  top:220px;
+  top:20vh;
   left:50%;
   transform:translateX(-50%);
-  padding:18px 42px;
+  padding:clamp(12px,3vw,18px) clamp(28px,6vw,42px);
   border-radius:40px;
   border:none;
   background:rgba(255,255,255,0.2);
   color:#e6ccff;
   font-family:'Great Vibes', cursive;
-  font-size:36px;
+  font-size:clamp(22px,5vw,36px);
   cursor:pointer;
   z-index:20;
   text-shadow:0 0 8px rgba(0,0,0,0.8);
-  width:80%;
+  width:85%;
   max-width:500px;
 }
 
 /* MESSAGE */
 #message{
   position:absolute;
-  bottom:40px;
+  bottom:5vh;
   width:100%;
-  font-size:38px;
+  font-size:clamp(20px,4.8vw,38px);
   opacity:0;
   transition:opacity 1.5s ease;
   z-index:10;
@@ -103,13 +103,12 @@ canvas{
 
 <body>
 
-<h1>Hey Aanchal</h1>
-<button id="btn">Click if you're cute</button>
-
+<h1>Dear Aanchal</h1>
+<button id="btn">bless this button with ur touch</button>
 <canvas id="c"></canvas>
 
 <div id="message">
-too far away to handpick flowers and too broke to buy you some ;-;…<br><br>
+too far away to handpick flowers for u and too broke to buy you some ;-;…<br><br>
 But here are some virtual flowers.<br><br>
 as a reminder that even if no one does, u will always have me ;] <br><br>
 Happy Valentine’s Day.<br><br>
@@ -145,7 +144,7 @@ function drawPetal(x,y,angle,scale){
 
   ctx.fillStyle = grad;
   ctx.shadowColor = "rgba(255,120,180,0.5)";
-  ctx.shadowBlur = 30;
+  ctx.shadowBlur = 25;
 
   ctx.beginPath();
   ctx.moveTo(0,0);
@@ -168,9 +167,10 @@ function drawLily(cx,cy,scale){
   ctx.fill();
 }
 
-function drawRibbon(cx,cy){
+function drawRibbon(cx,cy,scale){
   ctx.save();
   ctx.translate(cx,cy);
+  ctx.scale(scale,scale);
   ctx.fillStyle="#c2185b";
 
   ctx.beginPath();
@@ -195,8 +195,9 @@ function drawBouquet(){
   ctx.fillStyle="#1a0028";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
+  const scaleFactor = Math.min(canvas.width/900, 1); // <-- KEY SHRINK FIX
   const cx = canvas.width/2;
-  const cy = canvas.height*0.68;   // << FIXED POSITIONING
+  const cy = canvas.height*0.70;
 
   let leafGrad = ctx.createRadialGradient(cx,cy,100,cx,cy,450);
   leafGrad.addColorStop(0,"#2e7d32");
@@ -204,18 +205,18 @@ function drawBouquet(){
   ctx.fillStyle=leafGrad;
 
   ctx.beginPath();
-  ctx.ellipse(cx,cy+60,300,360,0,0,Math.PI*2);
+  ctx.ellipse(cx,cy+60*scaleFactor,300*scaleFactor,360*scaleFactor,0,0,Math.PI*2);
   ctx.fill();
 
-  drawLily(cx,cy-250,1.2);
-  drawLily(cx-200,cy-170,1);
-  drawLily(cx+200,cy-170,1);
-  drawLily(cx-100,cy-120,0.9);
-  drawLily(cx+100,cy-120,0.9);
-  drawLily(cx-170,cy-60,0.85);
-  drawLily(cx+170,cy-60,0.85);
+  drawLily(cx,cy-250*scaleFactor,1.2*scaleFactor);
+  drawLily(cx-200*scaleFactor,cy-170*scaleFactor,1*scaleFactor);
+  drawLily(cx+200*scaleFactor,cy-170*scaleFactor,1*scaleFactor);
+  drawLily(cx-100*scaleFactor,cy-120*scaleFactor,0.9*scaleFactor);
+  drawLily(cx+100*scaleFactor,cy-120*scaleFactor,0.9*scaleFactor);
+  drawLily(cx-170*scaleFactor,cy-60*scaleFactor,0.85*scaleFactor);
+  drawLily(cx+170*scaleFactor,cy-60*scaleFactor,0.85*scaleFactor);
 
-  drawRibbon(cx,cy+20);
+  drawRibbon(cx,cy+20*scaleFactor,scaleFactor);
 }
 
 function createFloating(){
